@@ -1,0 +1,49 @@
+﻿@using PagedList.Mvc;
+@model FizzBuzzUI.Models.FizzBuzzViewModel
+
+@{
+    ViewBag.Title = "FizzBuzz";
+}
+
+<h2>FizzBuzz</h2>
+
+<div>
+    @using (Html.BeginForm("FizzBuzzList", "FizzBuzz", FormMethod.Post))
+    {
+    <div>Please enter a number</div>
+    <div>@Html.TextBoxFor(model => model.UserInput) @Html.ValidationMessageFor(model => model.UserInput) </div>
+     <div><input type="submit" id="button" value="Submit" /></div>
+        if (Model !=null && Model.FizzBuzzList != null && Model.FizzBuzzList.Count > 0)
+        {
+        <div>
+            <div>
+                
+                @foreach (var fizzBuzzItem in Model.FizzBuzzList)
+                {
+                    if (fizzBuzzItem.Description.Contains(" "))
+                     {
+                         var values = @fizzBuzzItem.Description.Split(' ');
+                         var colors = @fizzBuzzItem.Color.Split(' ');
+                         <span class="@colors[0]">@values[0]</span>
+                         <span class="@colors[1]">@values[1]</span><br/>
+                     }
+                     else
+                     {
+                         <span class="@fizzBuzzItem.Color">@fizzBuzzItem.Description</span><br/>
+                     }
+                }
+            </div>
+        </div>
+            <div>    
+                @Html.PagedListPager(Model.FizzBuzzList, page => Url.Action("FizzBuzzList", new { Model.UserInput, page, pageSize = Model.FizzBuzzList.PageSize }))
+
+                Showing @Model.FizzBuzzList.FirstItemOnPage to @Model.FizzBuzzList.LastItemOnPage of @Model.FizzBuzzList.TotalItemCount
+            </div>
+        }
+    }
+     
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
